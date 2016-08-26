@@ -53,14 +53,6 @@ let nextTodo = 0
 const {Component}  = React
 
 
-const FilterLink = ({filter, children}) => (
-  <a href="#" onClick={(e)=>{
-      e.preventDefault();
-      store.dispatch({type:'SET_VISIBILITY_FILTER', filter});
-    }}>
-    {children}
-  </a>
-)
 
 const getVisibleTodos = (todos, filter) => {
   switch(filter){
@@ -72,6 +64,28 @@ const getVisibleTodos = (todos, filter) => {
       return todos.filter(t=>!t.completed);
   }
 }
+
+
+
+const FilterLink = ({filter, children}) => (
+  <a href="#" onClick={(e)=>{
+      e.preventDefault();
+      store.dispatch({type:'SET_VISIBILITY_FILTER', filter});
+    }}>
+    {children}
+  </a>
+)
+
+const Todo = ({onClick, text, completed}) =>{
+  return <li  onClick={onClick} style={{textDecoration:completed?'line-through':'none'}}>
+    {text}
+  </li>
+}
+
+const TodoList = ({todos, onClick}) =>{
+  return todos.map(t =>(<Todo  key={t.id} {...t}  onClick={onClick(t.id)}/>))
+}
+
 
 class TodoApp extends Component {
 
@@ -91,22 +105,19 @@ class TodoApp extends Component {
             }}> Add To do
         </button>
         <ul>
-          {visibleTodos.map(todo => (
-            <li key={todo.id} onClick={() => {
+          <TodoList todos={visibleTodos}
+            onClick={(id) => (
               store.dispatch({
-                id:todo.id,
-                type:'TOGGLE_TODO'
-              });
-            }} style={{textDecoration:todo.completed?'line-through':'none'}}>
-              {todo.text}
-            </li> )
-          )}
+                type:'TOGGLE_TODO',
+                id:id
+              })
+            )} />
         </ul>
         <p>
           Show: {' '}
-          <FilterLink filter="SHOW_ALL">All</FilterLink>{' '}
-          <FilterLink filter="SHOW_COMPLETED">Completed</FilterLink>{' '}
-          <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>{' '}
+          <FilterLink filter="SHOW_ALL">All</FilterLink>{', '}
+          <FilterLink filter="SHOW_COMPLETED">Completed</FilterLink>{', '}
+          <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>{', '}
 
         </p>
       </div>
