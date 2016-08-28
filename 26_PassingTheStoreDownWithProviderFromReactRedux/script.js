@@ -188,7 +188,6 @@ const Link = ({active, children, onClick}) => {
 }
 
 
-const { Provider } = ReactRedux;
 
 
 const TodoApp = () => {
@@ -202,7 +201,7 @@ const TodoApp = () => {
 }
 
 const {createStore} = Redux;
-
+const {Provider} = ReactRedux;
 
 ReactDOM.render(
   <Provider store={createStore(todoApp)}>
